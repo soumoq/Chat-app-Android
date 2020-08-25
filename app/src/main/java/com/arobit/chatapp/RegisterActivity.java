@@ -62,12 +62,12 @@ public class RegisterActivity extends AppCompatActivity {
                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
-                                                        if(task.isSuccessful()){
+                                                        if (task.isSuccessful()) {
                                                             Toast.makeText(getApplicationContext(), "Register successful", Toast.LENGTH_LONG).show();
-                                                            startActivity(new Intent(getApplicationContext(),GroupChatActivity.class));
+                                                            startActivity(new Intent(getApplicationContext(), GroupChatActivity.class));
                                                             finish();
-                                                        }else {
-                                                            Toast.makeText(getApplicationContext(), "Register failed: "+ task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                        } else {
+                                                            Toast.makeText(getApplicationContext(), "Register failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                                         }
                                                     }
                                                 });
