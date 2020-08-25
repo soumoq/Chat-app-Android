@@ -5,9 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -16,12 +16,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseFirestore db;
+    private EditText uname, pass;
+    private Button login, register;
+    private FirebaseAuth auth;
+    private DatabaseReference reference;
 
 
     @Override
@@ -30,9 +31,46 @@ public class MainActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
 
-            db = FirebaseFirestore.getInstance();
+            auth = FirebaseAuth.getInstance();
+            if (auth.getCurrentUser() != null) {
+                startActivity(new Intent(getApplicationContext(), GroupChatActivity.class));
+                finish();
+            }
+            uname = findViewById(R.id.uname);
+            pass = findViewById(R.id.pass);
+            login = findViewById(R.id.login);
+            register = findViewById(R.id.register);
 
-            save();
+
+            register.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+                }
+            });
+
+            login.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String email = uname.getText().toString();
+                    String password = pass.getText().toString();
+
+                    if (!email.equals("") && !password.equals("")) {
+                        auth.signInWithEmailAndPassword(email, password)
+                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_LONG).show();
+                                            startActivity(new Intent(getApplicationContext(), GroupChatActivity.class));
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+                    }
+                }
+            });
 
 
         } catch (Exception e) {
@@ -40,18 +78,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void save(){
-        Student student = new Student("soumo","bat4865@outlook.com");
-        db.collection("Student Info").document("2").set(student)
-        .addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful())
-                    Toast.makeText(getApplicationContext(),"Data store Successful",Toast.LENGTH_LONG).show();
-                else
-                    Toast.makeText(getApplicationContext(),"Data store Failed: "+ task.getException().getMessage(),Toast.LENGTH_LONG).show();
-            }
-        });
-
-    }
 }
