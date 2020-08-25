@@ -1,4 +1,4 @@
-package com.example.chatapp;
+package com.arobit.chatapp;
 
 import android.content.Context;
 

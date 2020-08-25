@@ -1,4 +1,4 @@
-package com.example.chatapp;
+package com.arobit.chatapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
